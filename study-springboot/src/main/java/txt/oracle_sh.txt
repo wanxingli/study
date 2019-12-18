@@ -1,0 +1,245 @@
+
+exportStructure.sh
+
+#!/bin/bash
+ssh -tt -o StrictHostKeyChecking=no -i $1 $2 2>&1 << scott
+sudo -i
+su - oracle
+echo "$USER"
+export ORACLE_SID=$3
+export ORACLE_HOME=$4/
+$4/bin/expdp $5 dumpfile=$6 logfile=$7 directory=$8 schemas=$9 content=METADATA_ONLY;
+exit
+exit
+exit
+scott
+echo done!
+
+
+
+exportData.sh
+
+#!/bin/bash
+ssh -tt -o StrictHostKeyChecking=no -i $1 $2 2>&1 << scott
+sudo -i
+su - oracle
+echo "$USER"
+export ORACLE_SID=$3
+export ORACLE_HOME=$4/
+echo "$USER"
+$4/bin/expdp $5 dumpfile=$6 logfile=$7 DIRECTORY=$8 CONTENT=DATA_ONLY tables=$9;
+exit
+exit
+exit
+scott
+echo done!
+
+
+
+mvDmpFile.sh
+
+#!/bin/bash
+# move the xxx.dmp to the target mechine
+ssh -tt -o StrictHostKeyChecking=no -i $1 $2 2>&1 << scott
+sudo -i
+su - oracle
+echo $USER
+scp $3 $4
+scp $5 $4
+exit
+exit
+exit
+scott
+echo done!
+
+
+
+findTablespace.sh
+
+#!/bin/bash
+# find tablespace
+ssh -o StrictHostKeyChecking=yes -i $1 $2 2>&1 << scott
+sudo -i
+su - oracle
+echo $USER
+export ORACLE_SID=$3
+export ORACLE_HOME=$4/
+$4/bin/sqlplus $5
+select ';' || tablespace_name || ';' as tablespace_name from dba_tablespaces;
+quit;
+exit
+exit
+exit
+scott
+echo done!
+
+
+
+createTablespace.sh
+
+#!/bin/bash
+# create tablespace
+ssh -o StrictHostKeyChecking=yes -i $1 $2 2>&1 << scott
+sudo -i
+su - oracle
+echo $USER
+export ORACLE_SID=$3
+export ORACLE_HOME=$4/
+$4/bin/sqlplus $5
+create tablespace $6 datafile '$7' size $8;
+quit;
+exit
+exit
+exit
+scott
+echo done!
+
+
+
+findUser.sh
+
+#!/bin/bash
+# find user
+ssh -o StrictHostKeyChecking=yes -i $1 $2 2>&1 << scott
+sudo -i
+su - oracle
+echo $USER
+export ORACLE_SID=$3
+export ORACLE_HOME=$4/
+$4/bin/sqlplus $5
+select ';' || username || ';' as username from dba_users;
+quit;
+exit
+exit
+exit
+scott
+echo done!
+
+
+
+dropUser.sh
+
+#!/bin/bash
+# drop user
+ssh -o StrictHostKeyChecking=yes -i $1 $2 2>&1 << scott
+sudo -i
+su - oracle
+echo $USER
+export ORACLE_SID=$3
+export ORACLE_HOME=$4/
+$4/bin/sqlplus $5
+drop user $6 cascade;
+quit;
+exit
+exit
+exit
+scott
+echo done!
+
+
+
+createUser.sh
+
+#!/bin/bash
+# create user
+ssh -o StrictHostKeyChecking=yes -i $1 $2 2>&1 << scott
+sudo -i
+su - oracle
+echo $USER
+export ORACLE_SID=$3
+export ORACLE_HOME=$4/
+$4/bin/sqlplus $5
+create user $6 identified by $6 default tablespace $7;
+grant connect,resource to $6;
+quit;
+exit
+exit
+exit
+scott
+echo done!
+
+
+
+findRole.sh
+
+#!/bin/bash
+# find role
+ssh -o StrictHostKeyChecking=yes -i $1 $2 2>&1 << scott
+sudo -i
+su - oracle
+echo $USER
+export ORACLE_SID=$3
+export ORACLE_HOME=$4/
+$4/bin/sqlplus $5
+select ';' || role || ';' as role from dba_roles where role like '%_R';
+quit;
+exit
+exit
+exit
+scott
+echo done!
+
+
+
+createRole.sh
+
+#!/bin/bash
+# create role
+ssh -o StrictHostKeyChecking=yes -i $1 $2 2>&1 << scott
+sudo -i
+su - oracle
+echo $USER
+export ORACLE_SID=$3
+export ORACLE_HOME=$4/
+$4/bin/sqlplus $5
+$6
+quit;
+exit
+exit
+exit
+scott
+echo done!
+
+
+
+import.sh
+
+#!/bin/bash
+# import
+ssh -tt -o StrictHostKeyChecking=no -i $1 $2 2>&1 << scott
+sudo -i
+su - oracle
+echo $USER
+export ORACLE_SID=$3
+export ORACLE_HOME=$4/
+$4/bin/impdp $5 dumpfile=$6 logfile=$7 DIRECTORY=$8 REMAP_SCHEMA=$9 table_exists_action=truncate;
+exit
+exit
+exit
+scott
+echo done!
+
+
+
+t1
+
+export ORACLE_SID=test12
+export ORACLE_HOME=/u01/app/oracle/product/11.2.0.4/dbhome_75/
+
+
+
+t5
+
+export ORACLE_SID=test52
+export ORACLE_HOME=/u01/app/oracle/product/11.2.0.4/dbhome_79/
+
+/u02/app/oracle/oradata/test1/RISK_UAT.dbf
+
+
+drop tablespace tablespace_name including contents and datafiles;
+
+drop role rolename;
+
+drop user username cascade;
+
+
