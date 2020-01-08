@@ -243,3 +243,23 @@ drop role rolename;
 drop user username cascade;
 
 
+
+whitelist.sh
+
+#!/bin/bash
+# update whitelist
+ssh -o StrictHostKeyChecking=yes -i $1 $2 2>&1 << scott
+sudo -i
+su - oracle
+export ORACLE_SID=$3
+export ORACLE_HOME=$4/
+$4/bin/sqlplus $5
+$6
+quit;
+exit
+exit
+exit
+scott
+echo done!
+
+
